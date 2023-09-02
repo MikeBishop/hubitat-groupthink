@@ -26,10 +26,9 @@ Map mainPage() {
             input "monitored", "capability.switch", title: "Monitored Group Activators",
                 required: true, multiple: true, submitOnChange: true
 
-            input "monitorOn", "bool", title: "Monitor on events?",
-                submitOnChange: true, defaultValue: true;
-            input "monitorOff", "bool", title: "Monitor off events?",
-                submitOnChange: true, defaultValue: true;
+            input "monitorType", "enum", title: "Type of events to monitor?",
+                submitOnChange: true, defaultValue: "Both", options: ["On", "Off", "Both"]
+
             def nonGroup = monitored.findAll { it.currentValue("groupState") == null }
             if( nonGroup ) {
                 paragraph "The following devices do not expose groupState and will be ignored: \n- " +
@@ -60,7 +59,15 @@ void updated() {
 
 void initialize() {
     unsubscribe();
-    subscribe(monitored, "switch", "deviceChanged");
+    if( monitorType == "On" ) {
+        subscribe(monitored, "switch.on", "deviceChanged");
+    }
+    else if (monitorType == "Off" ) {
+        subscribe(monitored, "switch.off", "deviceChanged");
+    }
+    else {
+        subscribe(monitored, "switch", "deviceChanged");
+    }
 }
 
 void deviceChanged(event) {
