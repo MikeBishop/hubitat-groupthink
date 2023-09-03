@@ -99,11 +99,6 @@ void checkGroup(props) {
         return;
     }
 
-    if( state[triggerDNI] > maxRetries ) {
-        clearForDNI(triggerDNI, "checkGroup: ${name} reached max retries; giving up", true);
-        return;
-    }
-
     if( !device ) {
         clearForDNI(triggerDNI, "checkGroup: ${name} not selected; giving up");
         return;
@@ -135,6 +130,7 @@ void checkGroup(props) {
                     break;
                 default:
                     clearForDNI(triggerDNI, "checkGroup: ${device} has unsupported color mode ${device.currentValue("colorMode")}; giving up");
+                    return;
             }
         }
         else if (device.hasCapability("ColorTemperature")) {
@@ -157,7 +153,13 @@ void checkGroup(props) {
         device.off();
     }
     state[triggerDNI] = state[triggerDNI] + 1;
-    schedule(triggerDNI, triggerTime);
+
+    if( state[triggerDNI] >= maxRetries ) {
+        clearForDNI(triggerDNI, "checkGroup: ${name} reached max retries; giving up", true);
+    }
+    else {
+        schedule(triggerDNI, triggerTime);
+    }
 }
 
 void repeatCT(device) {
