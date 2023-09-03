@@ -129,7 +129,7 @@ void checkGroup(props) {
                     repeatColor(device);
                     break;
                 default:
-                    clearForDNI(triggerDNI, "checkGroup: ${device} has unsupported color mode ${device.currentValue("colorMode")}; giving up");
+                    clearForDNI(triggerDNI, "checkGroup: ${device} has unsupported color mode ${device.currentValue("colorMode")}; giving up", true);
                     return;
             }
         }
