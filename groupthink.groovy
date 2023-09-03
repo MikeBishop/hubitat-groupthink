@@ -95,18 +95,18 @@ void checkGroup(props) {
 
     if( triggerTime != state[triggerDNI +"_last"] ) {
         // This is an old trigger; ignore it
-        debug("checkGroup: ignoring old trigger for ${name}");
+        debug("checkGroup: ignoring old trigger for ${device}");
         return;
     }
 
     if( !device ) {
-        clearForDNI(triggerDNI, "checkGroup: ${name} not selected; giving up");
+        clearForDNI(triggerDNI, "checkGroup: ${device} not selected; giving up");
         return;
     }
 
     def groupState = device.currentValue("groupState");
     if( groupState == null ) {
-        clearForDNI(triggerDNI, "checkGroup: ${name} does not expose groupState; giving up");
+        clearForDNI(triggerDNI, "checkGroup: ${device} does not expose groupState; giving up");
         return;
     }
 
@@ -114,7 +114,7 @@ void checkGroup(props) {
     if( (desiredState == "on" && groupState == "allOn") ||
         (desiredState == "off" && groupState == "allOff")
     ) {
-        clearForDNI(triggerDNI, "checkGroup: ${name} reached desired state; done");
+        clearForDNI(triggerDNI, "checkGroup: ${device} reached desired state; done");
         return;
     }
 
@@ -155,7 +155,7 @@ void checkGroup(props) {
     state[triggerDNI] = state[triggerDNI] + 1;
 
     if( state[triggerDNI] >= maxRetries ) {
-        clearForDNI(triggerDNI, "checkGroup: ${name} reached max retries; giving up", true);
+        clearForDNI(triggerDNI, "checkGroup: ${device} reached max retries; giving up", true);
     }
     else {
         schedule(triggerDNI, triggerTime);
@@ -165,9 +165,8 @@ void checkGroup(props) {
 void repeatCT(device) {
     def ct = device.currentValue("colorTemperature");
     def level = device.currentValue("level");
-    def name = device.getDisplayName() ?: device.getLabel();
 
-    debug "repeatCT: ${name} ${ct} ${level}";
+    debug "repeatCT: ${device} ${ct} ${level}";
     device.setColorTemperature(ct, level);
 }
 
@@ -175,9 +174,8 @@ void repeatColor(device) {
     def hue = device.currentValue("hue");
     def saturation = device.currentValue("saturation");
     def level = device.currentValue("level");
-    def name = device.getDisplayName() ?: device.getLabel();
 
-    debug "repeatColor: ${name} ${hue} ${saturation} ${level}";
+    debug "repeatColor: ${device} ${hue} ${saturation} ${level}";
     device.setColor([
         hue: hue,
         saturation: saturation,
