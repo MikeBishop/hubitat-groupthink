@@ -183,8 +183,8 @@ void repeatColor(device) {
     ]);
 }
 
-void clearForDNI(String triggerDNI, String reason, boolean warn = false) {
-    if( warn ) {
+void clearForDNI(String triggerDNI, String reason, boolean isWarning = false) {
+    if( isWarning ) {
         warn(reason);
     }
     else {
